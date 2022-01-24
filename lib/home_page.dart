@@ -231,27 +231,84 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       //buttons with ontap function to move the player and the misile.
-                      MyButton(
-                        icon: Icons.arrow_back_ios_new_rounded,
-                        function: moveLeft,
-                      ),
-                      MyButton(
-                        icon: Icons.arrow_upward_rounded,
-                        function: fireMisile,
-                      ),
-                      MyButton(
-                        icon: Icons.arrow_forward_ios_rounded,
-                        function: moveRight,
-                      ),
+                      // MyButton(
+                      //   icon: Icons.arrow_back_ios_new_rounded,
+                      //   function: moveLeft,
+                      // ),
+                      // MyButton(
+                      //   icon: Icons.arrow_upward_rounded,
+                      //   function: fireMisile,
+                      // ),
+                      // MyButton(
+                      //   icon: Icons.arrow_forward_ios_rounded,
+                      //   function: moveRight,
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  MyButton(
-                    icon: Icons.play_arrow,
-                    function: startGame,
-                  )
+                  // MyButton(
+                  //   icon: Icons.play_arrow,
+                  //   function: startGame,
+                  // )
                 ],
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          Expanded(
+            flex: 3,
+            child: Container(
+              color: Colors.pink[100],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ControlButton(
+                        iconData: Icons.arrow_back,
+                        onPressed: () {},
+                      ),
+                      ControlButton(
+                        iconData: Icons.arrow_upward,
+                        onPressed: () {},
+                      ),
+                      ControlButton(
+                        iconData: Icons.arrow_forward,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ControlButton(
+                        iconData: Icons.play_arrow,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
