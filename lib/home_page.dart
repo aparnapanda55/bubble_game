@@ -260,80 +260,123 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController ballController;
+  late final Animation<double> ballAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    ballController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..addStatusListener(
+        (status) {
+          if (status == AnimationStatus.completed) {
+            ballController.repeat(reverse: true);
+          }
+        },
+      );
+    ballAnimation = Tween<double>(begin: 0, end: 1).animate(ballController);
+    ballController.forward();
+  }
+
+  @override
+  void dispose() {
+    ballController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-              flex: 3,
-              child: Container(
-                color: Colors.pink[100],
-                child: Stack(
+    return LayoutBuilder(builder: (context, constraints) {
+      final maxWidth = constraints.maxWidth;
+      final maxHeight = constraints.maxHeight;
+
+      return SafeArea(
+        child: Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Container(
+                  color: Colors.pink[100],
+                  child: Stack(
+                    children: [
+                      AnimatedBuilder(
+                        animation: ballAnimation,
+                        builder: (context, child) {
+                          return Positioned(
+                            left: ballAnimation.value * (maxWidth - 20),
+                            bottom: 3 / 4 * maxHeight / 2,
+                            child: child!,
+                          );
+                        },
+                        child: const Ball(),
+                      ),
+                      const Positioned(
+                        left: 10,
+                        bottom: 0,
+                        child: Player(),
+                      ),
+                      const Positioned(
+                        left: 10 + 50 / 2 - 5 / 2,
+                        bottom: 60,
+                        child: Missile(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
                   children: [
-                    Positioned(
-                      top: 20,
-                      left: 20,
-                      child: Ball(),
-                    ),
-                    Positioned(
-                      left: 10,
-                      bottom: 0,
-                      child: Column(
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Missile(),
-                          Player(),
+                          ControlButton(
+                            iconData: Icons.arrow_back,
+                            onPressed: () {},
+                          ),
+                          ControlButton(
+                            iconData: Icons.arrow_upward,
+                            onPressed: () {},
+                          ),
+                          ControlButton(
+                            iconData: Icons.arrow_forward,
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ControlButton(
+                            iconData: Icons.play_arrow,
+                            onPressed: () {},
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ControlButton(
-                          iconData: Icons.arrow_back,
-                          onPressed: () {},
-                        ),
-                        ControlButton(
-                          iconData: Icons.arrow_upward,
-                          onPressed: () {},
-                        ),
-                        ControlButton(
-                          iconData: Icons.arrow_forward,
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ControlButton(
-                          iconData: Icons.play_arrow,
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
