@@ -267,10 +267,13 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage>
-    with SingleTickerProviderStateMixin {
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   late final AnimationController ballController;
   late final Animation<double> ballAnimation;
+
+  late final AnimationController missileController;
+  late final Animation<double> missileAnimation;
+
   double playerLeft = 0;
 
   @override
@@ -288,11 +291,24 @@ class _MainPageState extends State<MainPage>
       );
     ballAnimation = Tween<double>(begin: 0, end: 1).animate(ballController);
     ballController.forward();
+
+    missileController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          print('completed');
+          missileController.reset();
+        }
+      });
+    missileAnimation =
+        Tween<double>(begin: 0, end: 1).animate(missileController);
   }
 
   @override
   void dispose() {
     ballController.dispose();
+    missileController.dispose();
     super.dispose();
   }
 
@@ -312,6 +328,12 @@ class _MainPageState extends State<MainPage>
         playerLeft = maxWidth - 50;
       }
     });
+  }
+
+  _fireMissile() {
+    if (missileController.isDismissed) {
+      missileController.forward();
+    }
   }
 
   @override
@@ -341,16 +363,22 @@ class _MainPageState extends State<MainPage>
                         },
                         child: const Ball(),
                       ),
-                      AnimatedPositioned(
-                        duration: const Duration(seconds: 1),
+                      AnimatedBuilder(
+                        animation: missileAnimation,
+                        builder: (context, child) {
+                          return Positioned(
+                            left: playerLeft + 50 / 2 - 5 / 2,
+                            bottom:
+                                (3 / 4 * maxHeight) * missileAnimation.value,
+                            child: child!,
+                          );
+                        },
+                        child: Missile(),
+                      ),
+                      Positioned(
                         left: playerLeft,
                         bottom: 0,
                         child: Player(),
-                      ),
-                      Positioned(
-                        left: playerLeft + 50 / 2 - 5 / 2,
-                        bottom: 60,
-                        child: Missile(),
                       ),
                     ],
                   ),
@@ -367,7 +395,9 @@ class _MainPageState extends State<MainPage>
                     if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
                       _moveRight(maxWidth);
                     }
-                    if (event.isKeyPressed(LogicalKeyboardKey.space)) {}
+                    if (event.isKeyPressed(LogicalKeyboardKey.space)) {
+                      _fireMissile();
+                    }
                   },
                   child: Column(
                     children: [
@@ -381,7 +411,7 @@ class _MainPageState extends State<MainPage>
                             ),
                             ControlButton(
                               iconData: Icons.arrow_upward,
-                              onPressed: () {},
+                              onPressed: _fireMissile,
                             ),
                             ControlButton(
                               iconData: Icons.arrow_forward,

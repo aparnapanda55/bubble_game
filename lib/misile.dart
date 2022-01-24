@@ -8,8 +8,8 @@ class Missile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 5,
-      height: 150,
+      width: 10,
+      height: 10,
       color: Colors.purple[200],
     );
   }
