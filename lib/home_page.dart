@@ -271,6 +271,7 @@ class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   late final AnimationController ballController;
   late final Animation<double> ballAnimation;
+  double playerLeft = 0;
 
   @override
   void initState() {
@@ -322,13 +323,13 @@ class _MainPageState extends State<MainPage>
                         },
                         child: const Ball(),
                       ),
-                      const Positioned(
-                        left: 10,
+                      Positioned(
+                        left: playerLeft,
                         bottom: 0,
                         child: Player(),
                       ),
-                      const Positioned(
-                        left: 10 + 50 / 2 - 5 / 2,
+                      Positioned(
+                        left: playerLeft + 50 / 2 - 5 / 2,
                         bottom: 60,
                         child: Missile(),
                       ),
@@ -346,7 +347,14 @@ class _MainPageState extends State<MainPage>
                         children: [
                           ControlButton(
                             iconData: Icons.arrow_back,
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                playerLeft -= 50;
+                                if (playerLeft < 0) {
+                                  playerLeft = 0;
+                                }
+                              });
+                            },
                           ),
                           ControlButton(
                             iconData: Icons.arrow_upward,
@@ -354,7 +362,14 @@ class _MainPageState extends State<MainPage>
                           ),
                           ControlButton(
                             iconData: Icons.arrow_forward,
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                playerLeft += 50;
+                                if (playerLeft > (maxWidth - 50)) {
+                                  playerLeft = maxWidth - 50;
+                                }
+                              });
+                            },
                           ),
                         ],
                       ),
