@@ -323,7 +323,8 @@ class _MainPageState extends State<MainPage>
                         },
                         child: const Ball(),
                       ),
-                      Positioned(
+                      AnimatedPositioned(
+                        duration: const Duration(seconds: 1),
                         left: playerLeft,
                         bottom: 0,
                         child: Player(),
