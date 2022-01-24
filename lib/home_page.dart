@@ -200,20 +200,20 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    MyBall(
-                      ballX: ballX,
-                      ballY: ballY,
-                      colorBall: colorBall[e],
-                    ),
+                    // MyBall(
+                    //   ballX: ballX,
+                    //   ballY: ballY,
+                    //   colorBall: colorBall[e],
+                    // ),
                     //missile with its heigth increasing on tap and coordinate matches with the player coordinate....
-                    Misile(
-                        misileX: misileX,
-                        misileY: misileY,
-                        misileHeight: misileHeight),
+                    // Misile(
+                    //     misileX: misileX,
+                    //     misileY: misileY,
+                    //     misileHeight: misileHeight),
                     //my player for the moving player with its x-coordinate increasing or decreasing......
-                    MyPlayer(
-                      xCord: xCordPlayer,
-                    ),
+                    // MyPlayer(
+                    //   xCord: xCordPlayer,
+                    // ),
                   ],
                 ),
               ),
@@ -265,53 +265,74 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            flex: 3,
-            child: Container(
-              color: Colors.pink[100],
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ControlButton(
-                        iconData: Icons.arrow_back,
-                        onPressed: () {},
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Container(
+                color: Colors.pink[100],
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 20,
+                      left: 20,
+                      child: Ball(),
+                    ),
+                    Positioned(
+                      left: 10,
+                      bottom: 0,
+                      child: Column(
+                        children: [
+                          Missile(),
+                          Player(),
+                        ],
                       ),
-                      ControlButton(
-                        iconData: Icons.arrow_upward,
-                        onPressed: () {},
-                      ),
-                      ControlButton(
-                        iconData: Icons.arrow_forward,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ControlButton(
-                        iconData: Icons.play_arrow,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ControlButton(
+                          iconData: Icons.arrow_back,
+                          onPressed: () {},
+                        ),
+                        ControlButton(
+                          iconData: Icons.arrow_upward,
+                          onPressed: () {},
+                        ),
+                        ControlButton(
+                          iconData: Icons.arrow_forward,
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ControlButton(
+                          iconData: Icons.play_arrow,
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
