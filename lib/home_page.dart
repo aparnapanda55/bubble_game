@@ -274,7 +274,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   late final AnimationController missileController;
   late final Animation<double> missileAnimation;
 
+  double score = 0;
   double playerLeft = 0;
+  double ballBottom = 0;
+  double ballLeft = 0;
+  double missileLeft = 0;
+  double missileBottom = 0;
 
   @override
   void initState() {
@@ -295,10 +300,20 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     missileController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
-    )..addStatusListener((status) {
+    )
+      ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          print('completed');
           missileController.reset();
+        }
+      })
+      ..addListener(() {
+        if ((missileBottom > ballBottom - 10 &&
+                missileBottom < ballBottom + 30) &&
+            (missileLeft > ballLeft - 10 && missileLeft < ballLeft + 30)) {
+          print('hit');
+          setState(() {
+            score++;
+          });
         }
       });
     missileAnimation =
@@ -355,9 +370,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       AnimatedBuilder(
                         animation: ballAnimation,
                         builder: (context, child) {
+                          ballBottom = 3 / 4 * maxHeight / 2;
+                          ballLeft = ballAnimation.value * (maxWidth - 20);
                           return Positioned(
-                            left: ballAnimation.value * (maxWidth - 20),
-                            bottom: 3 / 4 * maxHeight / 2,
+                            left: ballLeft,
+                            bottom: ballBottom,
                             child: child!,
                           );
                         },
@@ -366,10 +383,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       AnimatedBuilder(
                         animation: missileAnimation,
                         builder: (context, child) {
+                          missileBottom =
+                              (3 / 4 * maxHeight) * missileAnimation.value;
+                          missileLeft = playerLeft + 50 / 2 - 5 / 2;
                           return Positioned(
-                            left: playerLeft + 50 / 2 - 5 / 2,
-                            bottom:
-                                (3 / 4 * maxHeight) * missileAnimation.value,
+                            left: missileLeft,
+                            bottom: missileBottom,
                             child: child!,
                           );
                         },
