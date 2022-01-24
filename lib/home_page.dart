@@ -274,7 +274,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   late final AnimationController missileController;
   late final Animation<double> missileAnimation;
 
-  double score = 0;
+  int score = 0;
   double playerLeft = 0;
   double ballBottom = 0;
   double ballLeft = 0;
@@ -367,6 +367,31 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   color: Colors.pink[100],
                   child: Stack(
                     children: [
+                      Positioned(
+                        left: 20,
+                        top: 20,
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 500),
+                          transitionBuilder:
+                              (Widget child, Animation<double> animation) {
+                            return ScaleTransition(
+                              scale: animation,
+                              child: child,
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                              '$score',
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              key: ValueKey<int>(score),
+                            ),
+                          ),
+                        ),
+                      ),
                       AnimatedBuilder(
                         animation: ballAnimation,
                         builder: (context, child) {
