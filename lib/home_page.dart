@@ -296,6 +296,24 @@ class _MainPageState extends State<MainPage>
     super.dispose();
   }
 
+  _moveLeft() {
+    setState(() {
+      playerLeft -= 50;
+      if (playerLeft < 0) {
+        playerLeft = 0;
+      }
+    });
+  }
+
+  _moveRight(double maxWidth) {
+    setState(() {
+      playerLeft += 50;
+      if (playerLeft > (maxWidth - 50)) {
+        playerLeft = maxWidth - 50;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
@@ -340,53 +358,51 @@ class _MainPageState extends State<MainPage>
               ),
               Expanded(
                 flex: 1,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ControlButton(
-                            iconData: Icons.arrow_back,
-                            onPressed: () {
-                              setState(() {
-                                playerLeft -= 50;
-                                if (playerLeft < 0) {
-                                  playerLeft = 0;
-                                }
-                              });
-                            },
-                          ),
-                          ControlButton(
-                            iconData: Icons.arrow_upward,
-                            onPressed: () {},
-                          ),
-                          ControlButton(
-                            iconData: Icons.arrow_forward,
-                            onPressed: () {
-                              setState(() {
-                                playerLeft += 50;
-                                if (playerLeft > (maxWidth - 50)) {
-                                  playerLeft = maxWidth - 50;
-                                }
-                              });
-                            },
-                          ),
-                        ],
+                child: RawKeyboardListener(
+                  focusNode: FocusNode(),
+                  onKey: (event) {
+                    if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+                      _moveLeft();
+                    }
+                    if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+                      _moveRight(maxWidth);
+                    }
+                    if (event.isKeyPressed(LogicalKeyboardKey.space)) {}
+                  },
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ControlButton(
+                              iconData: Icons.arrow_back,
+                              onPressed: _moveLeft,
+                            ),
+                            ControlButton(
+                              iconData: Icons.arrow_upward,
+                              onPressed: () {},
+                            ),
+                            ControlButton(
+                              iconData: Icons.arrow_forward,
+                              onPressed: () => _moveRight(maxWidth),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ControlButton(
-                            iconData: Icons.play_arrow,
-                            onPressed: () {},
-                          ),
-                        ],
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ControlButton(
+                              iconData: Icons.play_arrow,
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
